@@ -1,9 +1,30 @@
 /*********
  * WIR - Wireless Irrigation :
+ * 
+ * Operation Mode :
+ * Auto - (No Delay)
+ * Manual - cyclic (On Delay, On Duration)
+ * Manual - continuous (On DElay = 0, On Duration)
+ * Manual - Off/Idle (On Duration = 0)
+ * 
  * data model :
- * setTime = {
- *  onDelay : xxxx,
- *  onDuration : yyyy
+ * config = {
+ *  "idNode" : 9,
+ *  "mode" : 1, (Manual = 0, Auto = 1)
+ *  "cyclic" : 0, (One Shoot = 0, Cyclic = 1)
+ *  "onDelay" : xxxx,
+ *  "onDuration" : yyyy
+ * }
+ * status = {
+ *  "status" : 0, (Idle =0, 
+ *                Wait = 1, 
+ *                Active = 2,
+ *                Manual-One = 3,
+ *                Manual-Cyc = 4,
+ *                Manual-Con = 5,
+ *  )
+ *  "onDelay" : xxxx,
+ *  "onDuration" : yyyy
  * }
 *********/
 
