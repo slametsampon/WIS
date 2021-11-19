@@ -31,6 +31,16 @@
   },
   {
     "Sourcefile": "c:\\DATA\\Projects\\IoT\\wis\\build\\sketch\\wis.ino.cpp",
+    "Include": "ArduinoJson.h",
+    "Includepath": "C:\\DATA\\Arduino\\libraries\\ArduinoJson\\src"
+  },
+  {
+    "Sourcefile": "c:\\DATA\\Projects\\IoT\\wis\\build\\sketch\\wis.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "c:\\DATA\\Projects\\IoT\\wis\\build\\sketch\\oDeDu.cpp",
     "Include": "",
     "Includepath": null
   },

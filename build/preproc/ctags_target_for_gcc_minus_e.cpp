@@ -1,7 +1,7 @@
 # 1 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino"
 /*********
 
- * WIR - Wireless Irrigation :
+ * WIS - Wireless Irrigation System:
 
  * 
 
@@ -62,35 +62,24 @@
 # 34 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
 # 35 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
 # 36 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
+# 37 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
+# 38 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
 
-// Replace with your network credentials
-const char *ssid = "REPLACE_WITH_YOUR_SSID";
-const char *password = "REPLACE_WITH_YOUR_PASSWORD";
-
-const char *PARAM_INPUT_1 = "output";
-const char *PARAM_INPUT_2 = "state";
+ODeDu odedu("On Delay-Duration");
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
 //funtions declaration
 void urlController();
+void setupWifi();
 
 void setup()
 {
   // Serial port for debugging purposes
   Serial.begin(115200);
 
-  // Connect to Wi-Fi
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    delay(1000);
-    Serial.println("Connecting to WiFi..");
-  }
-
-  // Print ESP Local IP Address
-  Serial.println(WiFi.localIP());
+  setupWifi();
 
   urlController();
 
@@ -100,6 +89,22 @@ void setup()
 
 void loop()
 {
+  odedu.execute(SAMPLING_TIME);
+}
+
+//functions detail
+void setupWifi()
+{
+  // Connect to Wi-Fi
+  WiFi.begin(SSID, PASSWORD);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(1000);
+    Serial.println("Connecting to WiFi..");
+  }
+
+  // Print ESP Local IP Address
+  Serial.println(WiFi.localIP());
 }
 
 void urlController()
@@ -107,4 +112,73 @@ void urlController()
   // Route for root / web page
   server.on("/", HTTP_GET, [](AsyncWebServerRequest *request)
             { request->send_P(200, "text/html", index_html); });
+
+  // route to config
+  server.on("/getConfig", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
+              String configData = odedu.getConfig();
+              request->send(200, "application/json", configData);
+            });
+
+  // route to status
+  server.on("/getStatus", HTTP_GET, [](AsyncWebServerRequest *request)
+            {
+              String statusData = odedu.getStatus();
+              request->send(200, "application/json", statusData);
+            });
+
+  // route to config
+  server.on("/config", HTTP_POST, [](AsyncWebServerRequest *request)
+            {
+              String argData;
+              config configData;
+
+              if (request->hasArg("mode"))
+              {
+                argData = request->arg("mode");
+                Serial.print("Operation mode is: ");
+                Serial.println(argData);
+
+                if (argData == "modeA")
+                  configData.mode = 1;
+                else
+                  configData.mode = 0;
+              }
+
+              if (request->hasArg("cyclic"))
+              {
+                argData = request->arg("cyclic");
+                Serial.print("Cyclic is: ");
+                Serial.println(argData);
+
+                if (argData == "cyclic")
+                  configData.cyclic = 1;
+                else
+                  configData.cyclic = 0;
+              }
+
+              if (request->hasArg("onDelay"))
+              {
+                argData = request->arg("onDelay");
+                Serial.print("On Delay is: ");
+                Serial.println(argData);
+
+                unsigned long onDelay = (unsigned long)argData.toInt();
+                configData.onDelay = onDelay;
+              }
+
+              if (request->hasArg("onDuration"))
+              {
+                argData = request->arg("onDuration");
+                Serial.print("On Duration is: ");
+                Serial.println(argData);
+
+                unsigned long onDuration = (unsigned long)argData.toInt();
+                configData.onDuration = onDuration;
+              }
+
+              //update config data
+
+              odedu.setConfig(configData);
+            });
 }
