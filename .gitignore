@@ -1,3 +1,13 @@
+#Scratch for testing
+Scratch
+
+#config files
+#config
+
+#build directories
+build
+build/
+
 # Prerequisites
 *.d
 
@@ -30,8 +40,3 @@
 *.exe
 *.out
 *.app
-
-# Build
-build
-build/
-
