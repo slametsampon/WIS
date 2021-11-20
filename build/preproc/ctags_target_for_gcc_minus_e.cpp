@@ -23,7 +23,7 @@
 
  *  "idNode" : 9,
 
- *  "mode" : 1, (Manual = 0, Auto = 1)
+ *  "mode" : 1, (Stop = 0, Manual = 1, Auto = 2)
 
  *  "cyclic" : 0, (One Shoot = 0, Cyclic = 1)
 
@@ -78,6 +78,8 @@ void setup()
 {
   // Serial port for debugging purposes
   Serial.begin(115200);
+
+  odedu.init(2 /* what pin we're connected to ????*/);
 
   setupWifi();
 

@@ -2,6 +2,19 @@
 
 ODeDu::ODeDu(String id) : _id(id) {}
 
+void ODeDu::init(int pin)
+{
+    _irrigationValve = pin;
+    pinMode(_irrigationValve, OUTPUT);
+
+    //set default value
+    _config.idNode = 9;
+    _config.mode = AUTO;
+    _config.cyclic = ONE_SHOOT;
+    _config.onDelay = 90;    //minute
+    _config.onDuration = 35; //minute
+}
+
 void ODeDu::setConfig(config configData)
 {
     _config = configData;
@@ -9,6 +22,7 @@ void ODeDu::setConfig(config configData)
 
 void ODeDu::execute(unsigned long samplingTime)
 {
+    int oprStatus = IDLE;
     if ((millis() - _prevMilli) > samplingTime)
     {
         _prevMilli = millis();
@@ -23,20 +37,26 @@ void ODeDu::execute(unsigned long samplingTime)
             {
                 _firstRun = false;
                 _prevOnDelay = millis();
-                _oprStatus = WAIT;
+                oprStatus = WAIT;
             }
             else
             {
                 if ((millis() - _prevOnDelay) > (_config.onDelay * 60 * 1000))
                 {
-                    _oprStatus = ACTIVE;
+                    _oprStatus.onDelay = (millis() - _prevOnDelay) / (1000 * 60);
+                    _oprStatus.onDelay = _config.onDelay - _oprStatus.onDelay;
+
+                    oprStatus = ACTIVE;
                     _prevOnDuration = millis();
                 }
                 else
                 {
                     if ((millis() - _prevOnDuration) > (_config.onDuration * 60 * 1000))
                     {
-                        _oprStatus = IDLE;
+                        _oprStatus.onDuration = (millis() - _prevOnDuration) / (1000 * 60);
+                        _oprStatus.onDuration = _config.onDuration - _oprStatus.onDuration;
+
+                        oprStatus = IDLE;
                         _firstRun = true;
                     }
                 }
@@ -48,37 +68,82 @@ void ODeDu::execute(unsigned long samplingTime)
             {
                 _firstRun = false;
                 _prevOnDelay = millis();
-                _oprStatus = WAIT;
+                oprStatus = WAIT;
             }
             else
             {
                 if ((millis() - _prevOnDelay) > (_config.onDelay * 60 * 1000))
                 {
-                    _oprStatus = ACTIVE;
+                    _oprStatus.onDelay = (millis() - _prevOnDelay) / (1000 * 60);
+                    _oprStatus.onDelay = _config.onDelay - _oprStatus.onDelay;
+
+                    oprStatus = ACTIVE;
                     _prevOnDuration = millis();
                 }
                 else
                 {
                     if ((millis() - _prevOnDuration) > (_config.onDuration * 60 * 1000))
                     {
+                        _oprStatus.onDuration = (millis() - _prevOnDuration) / (1000 * 60);
+                        _oprStatus.onDuration = _config.onDuration - _oprStatus.onDuration;
+
                         _prevOnDelay = millis();
-                        _oprStatus = WAIT;
+                        oprStatus = WAIT;
                     }
                 }
             }
             break;
 
         case MANUAL_CON: //Manual Continuous
-            _oprStatus = ACTIVE;
+            oprStatus = ACTIVE;
+            break;
+
+        case AUTO: //Auto
+            if (_firstRun)
+            {
+                _firstRun = false;
+                _prevOnDelay = millis();
+                oprStatus = WAIT;
+            }
+            else
+            {
+                if ((millis() - _prevOnDelay) > (_config.onDelay * 60 * 1000))
+                {
+                    _oprStatus.onDelay = (millis() - _prevOnDelay) / (1000 * 60);
+                    _oprStatus.onDelay = _config.onDelay - _oprStatus.onDelay;
+
+                    oprStatus = ACTIVE;
+                    _prevOnDuration = millis();
+                }
+                else
+                {
+                    if ((millis() - _prevOnDuration) > (_config.onDuration * 60 * 1000))
+                    {
+                        _oprStatus.onDuration = (millis() - _prevOnDuration) / (1000 * 60);
+                        _oprStatus.onDuration = _config.onDuration - _oprStatus.onDuration;
+
+                        oprStatus = IDLE;
+                        _firstRun = true;
+                    }
+                }
+            }
             break;
 
         default:
             break;
         }
 
-        if (_oprStatus == ACTIVE)
+        _oprStatus.status = oprStatus;
+
+        if (oprStatus == ACTIVE)
         {
             //send command to activate irrigation valve
+            digitalWrite(_irrigationValve, HIGH);
+        }
+        else
+        {
+            //send command to de-activate irrigation valve
+            digitalWrite(_irrigationValve, LOW);
         }
     }
 }
@@ -97,11 +162,11 @@ String ODeDu::getConfig()
     String strConfig;
     StaticJsonDocument<96> doc;
 
-    doc["idNode"] = 15;
-    doc["mode"] = 1;
-    doc["cyclic"] = 0;
-    doc["onDelay"] = 1440;
-    doc["onDuration"] = 180;
+    doc["idNode"] = _config.idNode;
+    doc["mode"] = _config.mode;
+    doc["cyclic"] = _config.cyclic;
+    doc["onDelay"] = _config.onDelay;
+    doc["onDuration"] = _config.onDuration;
 
     serializeJson(doc, strConfig);
 
@@ -112,7 +177,8 @@ String ODeDu::getStatus()
 {
     /*
         {
-        "status": 15,
+        "mode": 1,
+        "status": 0,
         "onDelay": 1440,
         "onDuration": 180
         }
@@ -120,9 +186,10 @@ String ODeDu::getStatus()
     String strStatus;
     StaticJsonDocument<48> doc;
 
-    doc["status"] = 15;
-    doc["onDelay"] = 1440;
-    doc["onDuration"] = 180;
+    doc["mode"] = _oprStatus.mode;
+    doc["status"] = _oprStatus.status;
+    doc["onDelay"] = _oprStatus.onDelay;
+    doc["onDuration"] = _oprStatus.onDuration;
 
     serializeJson(doc, strStatus);
     return strStatus;
@@ -132,25 +199,36 @@ int ODeDu::_operationLogic()
 {
     int mode = _config.mode;
     int cyclic = _config.cyclic;
+    unsigned long onDelay = _config.onDelay;
     int oprMode = IDLE;
 
     switch (mode)
     {
     case MANUAL:
-        oprMode = MANUAL_CON;
         if (cyclic == ONE_SHOOT)
+        {
             oprMode = MANUAL_ONE;
+        }
         else if (cyclic == CYCLIC)
+        {
             oprMode = MANUAL_CYC;
-        /* code */
+        }
+
+        //manual continuous
+        if (onDelay <= 0)
+        {
+            oprMode = MANUAL_CON;
+        }
+
         break;
 
     case AUTO:
-        /* code */
+        oprMode = AUTO;
         break;
 
     default:
         break;
     }
+    _oprStatus.mode = oprMode;
     return oprMode;
 }

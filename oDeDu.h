@@ -11,7 +11,7 @@
  * data model :
  * config = {
  *  "idNode" : 9,
- *  "mode" : 1, (Manual = 0, Auto = 1)
+ *  "mode" : 1, (Stop = 0, Manual = 1, Auto = 2)
  *  "cyclic" : 0, (One Shoot = 0, Cyclic = 1)
  *  "onDelay" : xxxx,
  *  "onDuration" : yyyy
@@ -34,11 +34,16 @@
 #include <Arduino.h>
 #include <ArduinoJson.h>
 
-enum STATUS_OPR
+enum OUTPUT_STATUS
 {
     IDLE,
     WAIT,
-    ACTIVE,
+    ACTIVE
+};
+
+enum STATUS_OPR
+{
+    DUMMY_AUTO,
     MANUAL_ONE,
     MANUAL_CYC,
     MANUAL_CON
@@ -46,8 +51,9 @@ enum STATUS_OPR
 
 enum MODE_OPR
 {
+    AUTO,
     MANUAL,
-    AUTO
+    STOP
 };
 
 enum CYCLIC_OPR
@@ -65,6 +71,14 @@ typedef struct config
     unsigned long onDuration;
 } config;
 
+typedef struct oprStatus
+{
+    int mode;   //(Auto, Manual-one, Manual-cyc, Manual-con)
+    int status; //(Idle, Wait, Active)
+    unsigned long onDelay;
+    unsigned long onDuration;
+} oprStatus;
+
 class ODeDu
 {
 public:
@@ -72,7 +86,7 @@ public:
     String getConfig(); //JSON format
     String getStatus(); //JSON format
     void setConfig(config);
-    void init();
+    void init(int);
     void execute(unsigned long); //sampling periode ms
     void info();
 
@@ -80,10 +94,11 @@ private:
     int _operationLogic();
 
     boolean _firstRun = true;
-    int _oprStatus;
+    int _irrigationValve;
     String _id;
     unsigned long _prevMilli, _samplingTime, _prevOnDelay, _prevOnDuration;
     config _config;
+    oprStatus _oprStatus;
 };
 
 #endif

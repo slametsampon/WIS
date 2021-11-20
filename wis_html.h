@@ -44,7 +44,7 @@ const char index_html[] PROGMEM = R"rawliteral(
         label {
             padding: 12px 12px 12px 0;
             display: inline-block;
-            width: 25%;
+            width: 22%;
         }
 
         input[type=submit] {
@@ -83,6 +83,9 @@ const char index_html[] PROGMEM = R"rawliteral(
         <form name="configForm" action="/config" method="POST" onsubmit="return validateForm()">
             <hr style="height:2px;border-width:0;color:gray;background-color:gray">
         
+            <label for="id_idNode">ID Node</label>
+            <input type="text" id="id_idNode" name="idNode" placeholder="9"><br>
+
             <h3>Select Mode :</h3>
             <input type="radio" id="id_modeA" name="mode" value="modeA" checked onclick="getSensorCfg()">
             <label for="id_modeA">Auto</label><br>
@@ -94,15 +97,18 @@ const char index_html[] PROGMEM = R"rawliteral(
             <label for="id_cyclic">Cyclic</label><br>
         
             <h3>Enter Time (Minute) :</h3>
-            <label for="id_onDelay">On Delay</label><br>
+            <label for="id_onDelay">On Delay</label>
             <input type="text" id="id_onDelay" name="onDelay" placeholder="120"><br><br>
         
-            <label for="id_onDuration">On Duration</label><br>
+            <label for="id_onDuration">On Duration</label>
             <input type="text" id="id_onDuration" name="onDuration" placeholder="15"><br><br>
         
             <input type="submit" class="button" value="Submit"><br><br><br>
             <hr style="height:2px;border-width:0;color:gray;background-color:gray">
         </form>
+        <p>Mode :
+            <span id='id_mode'>Auto/Manual-one/Manual-cyc/Manual-con</span>
+        </p>
         <p>Status : 
             <span id='id_status'>Idle/Wait/Active</span>
         </p>
@@ -118,7 +124,7 @@ const char index_html[] PROGMEM = R"rawliteral(
 
     <script>
         var config = {
-            "idNode": 15,
+            "idNode": 9,
             "mode": 1,
             "cyclic": 0,
             "onDelay": 1440,
@@ -126,7 +132,8 @@ const char index_html[] PROGMEM = R"rawliteral(
             }
 
         var statusData = {
-            "status": 5,
+            "mode": 1,
+            "status": 0,
             "onDelay": 121,
             "onDuration": 46
         }
@@ -172,14 +179,18 @@ const char index_html[] PROGMEM = R"rawliteral(
             element.placeholder = config.onDuration.toString();
             element.value = element.placeholder;
 
-            //Operation Mode
+            //Operation Mode (Stop = 0, Manual = 1, Auto = 2)
             if (config.mode == 1) {
+                element = document.getElementById("id_modeM");
+                element.checked = true;
+            }
+            else if (config.mode == 2) {
                 element = document.getElementById("id_modeA");
                 element.checked = true;
             }
             else {
-                element = document.getElementById("id_modeM");
-                element.checked = true;
+                element = document.getElementById("id_modeM").checked=false;
+                element = document.getElementById("id_modeA").checked = false;
             }
         }
 
@@ -188,29 +199,35 @@ const char index_html[] PROGMEM = R"rawliteral(
             if (!SIMULATION) statusData = JSON.parse(data);
 
             //Status
-            if (statusData.status == 0) {
+            if (statusData.status == 1) {
                 element = document.getElementById("id_status");
-                element.innerHTML ="Idle";
-            }
-            else if (statusData.status == 1) {
-                element = document.getElementById("id_status");
-                element.innerHTML = "Wait";
+                element.innerHTML ="Wait";
             }
             else if (statusData.status == 2) {
                 element = document.getElementById("id_status");
                 element.innerHTML = "Active";
             }
-            else if (statusData.status == 3) {
-                element = document.getElementById("id_status");
-                element.innerHTML = "Manual-One";
-            }
-            else if (statusData.status == 4) {
-                element = document.getElementById("id_status");
-                element.innerHTML = "Manual-Cyc";
-            }
             else {
                 element = document.getElementById("id_status");
+                element.innerHTML = "Idle";
+            }
+
+            //operation mode - Auto, Manual-one shoot, manual-cyclic, manual-continuous
+            if (statusData.mode == 1) {
+                element = document.getElementById("id_mode");
+                element.innerHTML = "Manual-One";
+            }
+            else if (statusData.mode == 2) {
+                element = document.getElementById("id_mode");
+                element.innerHTML = "Manual-Cyc";
+            }
+            else if (statusData.status == 3) {
+                element = document.getElementById("id_mode");
                 element.innerHTML = "Manual-Con";
+            }
+            else {
+                element = document.getElementById("id_mode");
+                element.innerHTML = "Auto";
             }    
 
             let onDelay = statusData.onDelay;
