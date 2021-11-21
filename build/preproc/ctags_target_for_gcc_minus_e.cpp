@@ -65,6 +65,7 @@
 # 37 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
 # 38 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
 # 39 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
+# 40 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
 
 ODeDu odedu("On Delay-Duration");
 EspMqttBroker wisMqtt; //mqtt
@@ -146,6 +147,10 @@ void urlController()
               String statusData = odedu.getStatus();
               request->send(200, "application/json", statusData);
             });
+
+  // Route for config / web page
+  server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send_P(200, "text/html", config_html); });
 
   // route to config
   server.on("/config", HTTP_POST, [](AsyncWebServerRequest *request)

@@ -33,7 +33,8 @@
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
 #include "espMqttBroker.h"
-#include "wis_html.h"
+#include "wis_index_html.h"
+#include "wis_config_html.h"
 #include "oDeDu.h"
 #include "wis.h"
 
@@ -117,6 +118,10 @@ void urlController()
               String statusData = odedu.getStatus();
               request->send(200, "application/json", statusData);
             });
+
+  // Route for config / web page
+  server.on("/config", HTTP_GET, [](AsyncWebServerRequest *request)
+            { request->send_P(200, "text/html", config_html); });
 
   // route to config
   server.on("/config", HTTP_POST, [](AsyncWebServerRequest *request)
