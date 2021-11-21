@@ -64,9 +64,11 @@ enum CYCLIC_OPR
 
 typedef struct config
 {
-    int idNode; // 0 - 99
-    int mode;   //(Manual = 0, Auto = 1)
-    int cyclic; // (One Shoot = 0, Cyclic = 1)
+    int prevNode; // 0 - 99
+    int idNode;   // 0 - 99
+    int nextNode; // 0 - 99
+    int mode;     //(Manual = 0, Auto = 1, Repeater = 2)
+    int cyclic;   // (One Shoot = 0, Cyclic = 1)
     unsigned long onDelay;
     unsigned long onDuration;
 } config;

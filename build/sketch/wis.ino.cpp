@@ -34,24 +34,27 @@
 #include <ESP8266WiFi.h>
 #include <ESPAsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include "espMqttBroker.h"
 #include "wis_html.h"
 #include "oDeDu.h"
 #include "wis.h"
 
 ODeDu odedu("On Delay-Duration");
+EspMqttBroker wisMqtt; //mqtt
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
 //funtions declaration
 void urlController();
-void setupWifi();
+void startWiFiClient();
+void startWiFiAP();
 
-#line 48 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino"
+#line 51 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino"
 void setup();
-#line 63 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino"
+#line 70 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino"
 void loop();
-#line 48 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino"
+#line 51 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino"
 void setup()
 {
   // Serial port for debugging purposes
@@ -59,7 +62,11 @@ void setup()
 
   odedu.init(IRRIGATION_VALVE);
 
-  setupWifi();
+  // Start WiFi
+  if (WiFiAP)
+    startWiFiAP();
+  else
+    startWiFiClient();
 
   urlController();
 
@@ -73,18 +80,29 @@ void loop()
 }
 
 //functions detail
-void setupWifi()
+void startWiFiClient()
 {
-  // Connect to Wi-Fi
+  Serial.println("Connecting to " + (String)SSID);
+  WiFi.mode(WIFI_STA);
   WiFi.begin(SSID, PASSWORD);
+
   while (WiFi.status() != WL_CONNECTED)
   {
-    delay(1000);
-    Serial.println("Connecting to WiFi..");
+    delay(500);
+    Serial.print(".");
   }
+  Serial.println("");
 
-  // Print ESP Local IP Address
-  Serial.println(WiFi.localIP());
+  Serial.println("WiFi connected");
+  Serial.println("IP address: " + WiFi.localIP().toString());
+}
+
+void startWiFiAP()
+{
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP(SSID, PASSWORD);
+  Serial.println("AP started");
+  Serial.println("IP address: " + WiFi.softAPIP().toString());
 }
 
 void urlController()

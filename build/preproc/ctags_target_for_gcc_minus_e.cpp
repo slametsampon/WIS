@@ -64,15 +64,18 @@
 # 36 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
 # 37 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
 # 38 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
+# 39 "c:\\DATA\\Projects\\IoT\\wis\\wis.ino" 2
 
 ODeDu odedu("On Delay-Duration");
+EspMqttBroker wisMqtt; //mqtt
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
 
 //funtions declaration
 void urlController();
-void setupWifi();
+void startWiFiClient();
+void startWiFiAP();
 
 void setup()
 {
@@ -81,7 +84,11 @@ void setup()
 
   odedu.init(2 /* what pin we're connected to ????*/);
 
-  setupWifi();
+  // Start WiFi
+  if (WiFiAP)
+    startWiFiAP();
+  else
+    startWiFiClient();
 
   urlController();
 
@@ -95,18 +102,29 @@ void loop()
 }
 
 //functions detail
-void setupWifi()
+void startWiFiClient()
 {
-  // Connect to Wi-Fi
+  Serial.println("Connecting to " + (String)SSID);
+  WiFi.mode(WIFI_STA);
   WiFi.begin(SSID, PASSWORD);
+
   while (WiFi.status() != WL_CONNECTED)
   {
-    delay(1000);
-    Serial.println("Connecting to WiFi..");
+    delay(500);
+    Serial.print(".");
   }
+  Serial.println("");
 
-  // Print ESP Local IP Address
-  Serial.println(WiFi.localIP());
+  Serial.println("WiFi connected");
+  Serial.println("IP address: " + WiFi.localIP().toString());
+}
+
+void startWiFiAP()
+{
+  WiFi.mode(WIFI_AP);
+  WiFi.softAP(SSID, PASSWORD);
+  Serial.println("AP started");
+  Serial.println("IP address: " + WiFi.softAPIP().toString());
 }
 
 void urlController()

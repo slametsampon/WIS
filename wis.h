@@ -4,6 +4,7 @@
 
 #define IRRIGATION_VALVE 2 // what pin we're connected to ????
 
+bool WiFiAP = false; // Do yo want the ESP as AP?
 const char *SSID = "REPLACE_WITH_YOUR_SSID";
 const char *PASSWORD = "REPLACE_WITH_YOUR_PASSWORD";
 
