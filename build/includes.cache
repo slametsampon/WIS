@@ -31,6 +31,21 @@
   },
   {
     "Sourcefile": "c:\\DATA\\Projects\\IoT\\wis\\build\\sketch\\wis.ino.cpp",
+    "Include": "uMQTTBroker.h",
+    "Includepath": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src"
+  },
+  {
+    "Sourcefile": "c:\\DATA\\Projects\\IoT\\wis\\build\\sketch\\wis.ino.cpp",
+    "Include": "ArduinoJson.h",
+    "Includepath": "C:\\DATA\\Arduino\\libraries\\ArduinoJson\\src"
+  },
+  {
+    "Sourcefile": "c:\\DATA\\Projects\\IoT\\wis\\build\\sketch\\wis.ino.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "c:\\DATA\\Projects\\IoT\\wis\\build\\sketch\\oDeDu.cpp",
     "Include": "",
     "Includepath": null
   },
@@ -181,6 +196,66 @@
   },
   {
     "Sourcefile": "C:\\Users\\sam294\\AppData\\Local\\Arduino15\\packages\\esp8266\\hardware\\esp8266\\3.0.2\\libraries\\Hash\\src\\Hash.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\MQTT.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\mqtt.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\mqtt_msg.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\mqtt_retainedlist.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\mqtt_server.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\mqtt_topiclist.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\mqtt_topics.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\proto.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\queue.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\ringbuf_mqtt.c",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\uMQTTBroker.cpp",
+    "Include": "",
+    "Includepath": null
+  },
+  {
+    "Sourcefile": "C:\\DATA\\Arduino\\libraries\\uMQTTBroker\\src\\utils.c",
     "Include": "",
     "Includepath": null
   }
