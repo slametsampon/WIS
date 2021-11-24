@@ -181,14 +181,16 @@ function updateTime() {
 }
 
 setInterval(function ( ) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      updateValues(this.responseText);
-    }
-  };
-  xhttp.open("GET", "/getSensor", true);
-  xhttp.send();
+  if (!SIMULATION) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        updateValues(this.responseText);
+      }
+    };
+    xhttp.open("GET", "/getSensor", true);
+    xhttp.send();
+  }
 }, 10000 ) ;
 
 // This is executed after the document has finished loading.

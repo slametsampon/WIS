@@ -1,0 +1,85 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <title>WIS - Configuration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <script src="jquery.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <div class="topnav">
+        <ul>
+            <li id="home"><a href="/">Home</a></li>
+            <li id="report"><a href="/report">Report</a></li>
+            <li id="config"><a href="/config">Config</a></li>
+            <li id="login"><a href="/login" class="disabled-link">Login</a></li>
+            <li id="logout"><a href="/logout" onclick="return confirm('Are you sure to logout ?')">Logout</a></li>
+            <li id="about"><a href="#">About</a></li>
+            <li id="activeUser">User</li>
+        </ul>
+    </div>
+    <div class="content">
+        <div class="card">
+            <h2>WIS - Configuration - #<span id='id_node'>60</span></h2>
+            <form name="configForm" action="/config" method="POST" onsubmit="return validateForm()">
+                <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+            
+                <label for="id_prevNode">Prev. Node</label>
+                <input type="text" id="id_prevNode" name="prevNode" placeholder="8"><br>
+
+                <label for="id_nextNode">Next Node</label>
+                <input type="text" id="id_nextNode" name="prevNode" placeholder="10"><br><br>
+
+                <label for="id_idNode">ID Node</label>
+                <input type="text" id="id_idNode" name="idNode" placeholder="9"><br>
+
+                <label for="id_mode">Mode :</label>
+                <select name="mode" id="id_mode">
+                    <option value="manual">Manual</option>
+                    <option value="auto">Auto</option>
+                    <option value="repeater">Repeater</option>
+                </select>
+            
+                <input type="checkbox" id="id_cyclic" name="cyclic" value="cyclic">
+                <label for="id_cyclic">Cyclic</label><br>
+            
+                <h3>Enter Time (Minute) :</h3>
+                <label for="id_onDelay">On Delay</label>
+                <input type="text" id="id_onDelay" name="onDelay" placeholder="120"><br>
+            
+                <label for="id_onDuration">On Duration</label>
+                <input type="text" id="id_onDuration" name="onDuration" placeholder="15"><br><br>
+            
+                <input type="submit" class="button" value="Submit"><br><br>
+            </form>
+        </div>
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <span class="close">&times;</span>
+                    <h2>WIS - Wireless Irrigation System</h2>
+                </div>
+                <div class="modal-body">
+                    <p>IC - Irrigation Control</p>
+                    <p>Monitoring H, T</p>
+                    <p>WSC - Water Storage Control</p>
+                </div>
+                <div class="modal-footer">
+                    <h5>SAM - Semanding Agrifarm Makmur</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script src="authentication.js"></script>
+<script src="modal-dialog.js"></script>
+<script src="configIC.js"></script>
+</html>

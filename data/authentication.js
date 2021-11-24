@@ -1,4 +1,4 @@
-const SIMULATION = false;
+const SIMULATION = true;
 const OPERATOR_LEVEL = 1;
 const ENGINEER_LEVEL = 9;
 
