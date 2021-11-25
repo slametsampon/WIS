@@ -1,0 +1,68 @@
+<html>
+
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+        <script src="jquery.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="style.css"> 
+
+        <title>IoT DATA LOGGER - Login</title>
+    </head>
+
+    <body>
+
+        <div class="topnav">
+            <ul>
+                <li id = "home"><a href="/">Home</a></li>
+                <li id = "report"><a href="/report">Report</a></li>   
+                <li id = "config"><a href="/config">Config</a></li>   
+                <li id = "login"><a href="/login" class="disabled-link">Login</a></li>   
+                <li id = "logout"><a href="/logout" onclick="return confirm('Are you sure to logout ?')">Logout</a></li>   
+                <li id="about"><a href="#">About</a></li>
+                <li id="activeUser">User</li>
+            </ul>
+        </div>
+      
+        <div class="content">
+            <div class="card">
+                <h5>Login Form</h5>
+                <form action="/login" method="POST">
+                    <label for="username">Username</label><br>
+                    <input type="text" name="username" placeholder="Username"><br><br>
+                  
+                    <label for="password">Password</label><br>
+                    <input type="password" name="password" placeholder="Password"><br><br>
+                      
+                    <input type="submit" value="Login">    
+                </form>
+            </div>
+            <div id = "loginStatus"></div>
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close">&times;</span>
+                        <h2>WIS - Wireless Irrigation System</h2>
+                    </div>
+                    <div class="modal-body">
+                        <p>IC - Irrigation Control</p>
+                        <p>Monitoring H, T</p>
+                        <p>WSC - Water Storage Control</p>
+                    </div>
+                    <div class="modal-footer">
+                        <h5>SAM - Semanding Agrifarm Makmur</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+
+    <script src="authentication.js"></script>
+    <script src="modal-dialog.js"></script>
+    <script src="login.js"></script>
+</html>

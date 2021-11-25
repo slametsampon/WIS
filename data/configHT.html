@@ -1,0 +1,89 @@
+<html>
+
+    <head>
+        <meta http-equiv="content-type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+        <script src="jquery.min.js"></script>
+        <script src="bootstrap.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="style.css"> 
+
+        <title>IoT DATA LOGGER - Config</title>
+    </head>
+
+    <body>
+
+        <div class="topnav">
+            <ul>
+                <li id = "home"><a href="/">Home</a></li>
+                <li id = "report"><a href="/report">Report</a></li>   
+                <li id = "config"><a href="/config" class="disabled-link">Config</a></li>   
+                <li id = "login"><a href="/login">Login</a></li>   
+                <li id = "logout"><a href="/logout" onclick="return confirm('Are you sure to logout ?')">Logout</a></li>   
+                <li id="about"><a href="#">About</a></li>
+                <li id="activeUser">User</li>
+            </ul>
+        </div>
+      
+        <div class="content">
+            <div class="card">
+                <h3>Configuration - Form</h3><br>
+                <form name="configForm" action="/config" method="POST" onsubmit="return validateForm()">
+                    <div>
+
+                        <label for="id_samplingTime">Sampling (ms)</label><br>
+                        <input type="text" id="id_samplingTime" name="samplingTime" placeholder="6000">
+                      
+                    </div>
+                    <hr style="height:2px;border-width:0;color:gray;background-color:gray">
+
+                    <input type="radio" id="configT" name="config" value="configT" checked onclick="getSensorCfg()">
+                    <label for="configT">Temperature</label><br>
+
+                    <input type="radio" id="configH" name="config" value="configH" onclick="getSensorCfg()">
+                    <label for="configH">Humidity</label><br><br>
+
+                    <label for="id_alfaEma">Alfa Ema (%)</label><br>
+                    <input type="text" id="id_alfaEma" name="alfaEma" placeholder="80"><br><br>
+                  
+                    <label for="id_alarmH">Alarm High</label><br>
+                    <input type="text" id="id_alarmH" name="alarmH" placeholder="90"><br><br>
+                  
+                    <label for="id_alarmL">Alarm Low</label><br>
+                    <input type="text" id="id_alarmL" name="alarmL" placeholder="45"><br><br>
+                  
+                    <label for="id_indicatorH">Indicator High</label><br>
+                    <input type="id_text" id="id_indicatorH" name="indicatorH" placeholder="100"><br><br>
+                  
+                    <label for="id_indicatorL">Indicator Low</label><br>
+                    <input type="text" id="id_indicatorL" name="indicatorL" placeholder="0"><br><br>
+
+                    <input type="submit" value="Submit">
+                </form>
+            </div>
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
+                <!-- Modal content -->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <span class="close">&times;</span>
+                        <h2>WIS - Wireless Irrigation System</h2>
+                    </div>
+                    <div class="modal-body">
+                        <p>IC - Irrigation Control</p>
+                        <p>Monitoring H, T</p>
+                        <p>WSC - Water Storage Control</p>
+                    </div>
+                    <div class="modal-footer">
+                        <h5>SAM - Semanding Agrifarm Makmur</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
+    <script src="authentication.js"></script>
+    <script src="modal-dialog.js"></script>
+    <script src="configHT.js"></script>
+</html>
